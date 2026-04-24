@@ -41,6 +41,8 @@ src/
 
 ## Setup local
 
+Requer Node.js 20.19 ou superior.
+
 ```bash
 npm install
 cp .env.example .env
