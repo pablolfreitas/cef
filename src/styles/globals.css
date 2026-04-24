@@ -1,0 +1,45 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #0A0B0E;
+  --bg2:       #111318;
+  --bg3:       #181C24;
+  --bg4:       #1E2330;
+  --border:    rgba(255,255,255,0.06);
+  --border2:   rgba(255,255,255,0.12);
+  --text:      #F0F2F8;
+  --muted:     #7A8099;
+  --muted2:    #3A3F55;
+
+  --gold:      #F5C842;
+  --gold-bg:   rgba(245,200,66,0.08);
+  --teal:      #2DD4A8;
+  --teal-bg:   rgba(45,212,168,0.08);
+  --blue:      #5B8DEF;
+  --blue-bg:   rgba(91,141,239,0.08);
+  --coral:     #F0715A;
+  --coral-bg:  rgba(240,113,90,0.08);
+  --purple:    #9B7FE8;
+  --purple-bg: rgba(155,127,232,0.08);
+
+  --radius:    12px;
+  --radius-sm: 8px;
+  --sidebar-w: 240px;
+
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+}
+
+body { min-height: 100vh; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+button { cursor: pointer; font-family: inherit; }

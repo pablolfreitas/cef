@@ -1,0 +1,129 @@
+.wrap { display: flex; flex-direction: column; gap: 20px; }
+
+.mesTabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mesTab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  color: var(--muted);
+  transition: all 0.15s;
+}
+
+.mesTab:hover { border-color: var(--border2); color: var(--text); }
+.mesTab.active { background: var(--gold); color: #0A0B0E; border-color: var(--gold); }
+
+.mesTabBadge {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  background: rgba(0,0,0,0.15);
+  border-radius: 99px;
+  padding: 1px 5px;
+}
+
+.mesHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.mesLabel {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+.mesTitulo {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.mesStats { text-align: right; }
+.mesPct {
+  display: block;
+  font-family: 'Syne', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--gold);
+  line-height: 1;
+}
+.mesDone { font-size: 11px; color: var(--muted); }
+
+.progressBar {
+  height: 5px;
+  background: var(--bg3);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--gold);
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+.repTabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.repLabel {
+  font-size: 11px;
+  color: var(--muted);
+  margin-right: 4px;
+}
+
+.repTab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  color: var(--muted);
+  transition: all 0.15s;
+}
+
+.repTab:hover { border-color: var(--border2); color: var(--text); }
+
+.repTab.repActive {
+  background: var(--teal-bg);
+  border-color: rgba(45,212,168,0.3);
+  color: var(--teal);
+}
+
+.repBadge {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  background: rgba(45,212,168,0.15);
+  border-radius: 99px;
+  padding: 1px 5px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }

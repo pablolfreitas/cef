@@ -1,0 +1,135 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topbar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 15px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.topbarTitle {
+  font-family: 'Syne', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.topbarRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.date {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: capitalize;
+}
+
+.userEmail {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.signOutBtn {
+  min-height: 28px;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  background: var(--bg3);
+  color: var(--text);
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.signOutBtn:hover {
+  border-color: rgba(245,200,66,0.35);
+  color: var(--gold);
+}
+
+.syncPill {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--teal);
+  background: var(--teal-bg);
+  border: 1px solid rgba(45,212,168,0.2);
+  padding: 2px 8px;
+  border-radius: 99px;
+  animation: pulse 1.5s infinite;
+}
+
+.errorPill {
+  font-size: 10px;
+  color: var(--coral);
+  background: var(--coral-bg);
+  border: 1px solid rgba(240,113,90,0.2);
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+.content {
+  padding: 28px 32px;
+  flex: 1;
+}
+
+/* Loading screen */
+.loading {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.loadingSpinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--border2);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 900px) {
+  .main    { margin-left: 200px; }
+  .content { padding: 20px; }
+  .topbar  { padding: 12px 20px; }
+}
+
+@media (max-width: 640px) {
+  .main   { margin-left: 0; }
+  .topbar { padding: 12px 16px; }
+  .content{ padding: 16px; }
+  .userEmail,
+  .date { display: none; }
+}
