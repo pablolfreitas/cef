@@ -51,10 +51,11 @@ function StreakGrid({ getDailyActivity }: any) {
 }
 
 export default function Dashboard({
-  pctDone, totalDone, totalSessions, totalQuestions,
+  pctDone, totalDone, totalSessions, totalQuestions, totalCorrect, totalWrong,
   avgPerDay, horasEstudadas, studyDaysCount,
   getMesProgress, getSubjectStats, getWeeklyData, getDailyActivity,
-}) {
+}: any) {
+  const accuracy = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0
   const mot = getMotivation(pctDone)
   const weekData = getWeeklyData()
   const subStats = getSubjectStats()
@@ -76,10 +77,11 @@ export default function Dashboard({
 
       {/* Stat cards */}
       <div className={s.statsGrid}>
+        <StatCard color="teal"   label="Taxa de Acerto"     value={`${accuracy}%`}                          sub={`${totalCorrect} acertos / ${totalWrong} erros`} pct={accuracy} />
         <StatCard color="gold"   label="Total de Questões"  value={totalQuestions.toLocaleString('pt-BR')} sub="registradas no ciclo" pct={pctDone} />
-        <StatCard color="teal"   label="Sessões Concluídas" value={`${totalDone} / ${totalSessions}`}       sub="de 180 sessões (5×12×3)" pct={Math.round(totalDone/totalSessions*100)} />
-        <StatCard color="blue"   label="Média por Dia"      value={avgPerDay != null ? avgPerDay : '—'}      sub={`em ${studyDaysCount} dia(s) de estudo`} />
-        <StatCard color="purple" label="Horas Estudadas"    value={`${horasEstudadas}h`}                    sub="estimado (1h30 / sessão)" />
+        <StatCard color="blue"   label="Sessões Concluídas" value={`${totalDone} / ${totalSessions}`}       sub="de 180 sessões (5×12×3)" pct={Math.round(totalDone/totalSessions*100)} />
+        <StatCard color="purple" label="Média por Dia"      value={avgPerDay != null ? avgPerDay : '—'}      sub={`em ${studyDaysCount} dia(s) de estudo`} />
+        <StatCard color="teal"   label="Horas Estudadas"    value={`${horasEstudadas}h`}                    sub="estimado (1h30 / sessão)" />
       </div>
 
       {/* Charts row */}

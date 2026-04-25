@@ -18,6 +18,11 @@ create table if not exists public.sessions (
 alter table public.sessions
   add column if not exists user_id uuid references auth.users(id) on delete cascade;
 
+-- Migration Update Fase 6: Acertos, Erros e Anotações
+ALTER TABLE sessions ADD COLUMN IF NOT EXISTS correct integer DEFAULT 0;
+ALTER TABLE sessions ADD COLUMN IF NOT EXISTS wrong integer DEFAULT 0;
+ALTER TABLE sessions ADD COLUMN IF NOT EXISTS notes text;
+
 delete from public.sessions
 where user_id is null;
 

@@ -8,7 +8,8 @@ export default function StatsView({
   progress, totalDone, totalSessions, totalQuestions,
   avgPerDay, horasEstudadas, studyDaysCount,
   getMesProgress, getSubjectStats, getWeeklyData, onReset,
-}) {
+  totalCorrect, totalWrong,
+}: any) {
   const subStats   = getSubjectStats()
   const weekData   = getWeeklyData()
 
@@ -28,7 +29,9 @@ export default function StatsView({
   })
 
   const subjectRows = Object.entries(subStats)
-    .sort((a, b) => b[1].questions - a[1].questions)
+    .sort((a: any, b: any) => b[1].questions - a[1].questions)
+
+  const accuracy = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0
 
   return (
     <div className={s.wrap}>
@@ -44,8 +47,8 @@ export default function StatsView({
                 <div key={name} className={s.subjectRow}>
                   <span className={s.dot} style={{ background: color }} />
                   <span className={s.subName}>{name}</span>
-                  <span className={s.subQ}>{v.questions.toLocaleString('pt-BR')} q</span>
-                  <span className={s.subPct} style={{ color }}>{pct}%</span>
+                  <span className={s.subQ}>{v.correct} ✅ / {v.wrong} ❌</span>
+                  <span className={s.subPct} style={{ color }}>{pct}% (Acc: {v.questions > 0 ? Math.round((v.correct/v.questions)*100) : 0}%)</span>
                 </div>
               )
             })}
@@ -59,6 +62,9 @@ export default function StatsView({
             <InfoRow label="Total de sessões"      val={`${totalDone} / ${totalSessions}`} />
             <InfoRow label="% do ciclo completo"   val={`${Math.round(totalDone / totalSessions * 100)}%`} highlight />
             <InfoRow label="Total de questões"     val={totalQuestions.toLocaleString('pt-BR')} />
+            <InfoRow label="Total de acertos"      val={totalCorrect.toLocaleString('pt-BR')} highlight />
+            <InfoRow label="Total de erros"        val={totalWrong.toLocaleString('pt-BR')} />
+            <InfoRow label="Taxa de Acerto Geral"  val={`${accuracy}%`} highlight />
             <InfoRow label="Horas estudadas (est.)"val={`${horasEstudadas}h`} />
             <InfoRow label="Dias de estudo"        val={studyDaysCount} />
             <InfoRow label="Média por dia ativo"   val={avgPerDay != null ? `${avgPerDay} q` : '—'} />
@@ -109,7 +115,7 @@ export default function StatsView({
   )
 }
 
-function InfoRow({ label, val, highlight }) {
+function InfoRow({ label, val, highlight }: any) {
   return (
     <div className={s.infoRow}>
       <span className={s.infoLabel}>{label}</span>

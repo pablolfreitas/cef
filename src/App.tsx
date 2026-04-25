@@ -145,6 +145,8 @@ export default function App() {
                       totalDone={progress.totalDone}
                       totalSessions={progress.totalSessions}
                       totalQuestions={progress.totalQuestions}
+                      totalCorrect={progress.totalCorrect}
+                      totalWrong={progress.totalWrong}
                       avgPerDay={progress.avgPerDay}
                       horasEstudadas={progress.horasEstudadas}
                       studyDaysCount={progress.studyDaysCount}
@@ -162,6 +164,7 @@ export default function App() {
                       progress={progress.progress}
                       toggleDone={progress.toggleDone}
                       setQuestions={progress.setQuestions}
+                      setNotes={progress.setNotes}
                       getMesProgress={progress.getMesProgress}
                       initialMes={curMes}
                     />
@@ -175,6 +178,8 @@ export default function App() {
                       totalDone={progress.totalDone}
                       totalSessions={progress.totalSessions}
                       totalQuestions={progress.totalQuestions}
+                      totalCorrect={progress.totalCorrect}
+                      totalWrong={progress.totalWrong}
                       avgPerDay={progress.avgPerDay}
                       horasEstudadas={progress.horasEstudadas}
                       studyDaysCount={progress.studyDaysCount}

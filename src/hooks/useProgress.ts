@@ -29,7 +29,7 @@ export function useProgress(userId) {
 
       const { data, error } = await supabase
         .from(TABLE)
-        .select('session_id, done, questions, done_at')
+        .select('session_id, done, questions, done_at, correct, wrong, notes')
         .eq('user_id', userId)
 
       if (!active) return
@@ -41,12 +41,15 @@ export function useProgress(userId) {
           if (local) setProgress(JSON.parse(local))
         } catch {}
       } else {
-        const map = {}
+        const map: any = {}
         data.forEach(row => {
           map[row.session_id] = {
             done: row.done,
             questions: row.questions,
             done_at: row.done_at,
+            correct: row.correct,
+            wrong: row.wrong,
+            notes: row.notes,
           }
         })
         setProgress(map)
@@ -66,7 +69,7 @@ export function useProgress(userId) {
   const saveSession = useCallback(async (sessionId, patch) => {
     if (!userId) return
 
-    const current = progress[sessionId] ?? { done: false, questions: 0, done_at: null }
+    const current = progress[sessionId] ?? { done: false, questions: 0, done_at: null, correct: 0, wrong: 0, notes: '' }
     const updated = { ...current, ...patch }
 
     setProgress(prev => {
@@ -86,14 +89,17 @@ export function useProgress(userId) {
         done: updated.done,
         questions: updated.questions,
         done_at: updated.done_at,
+        correct: updated.correct,
+        wrong: updated.wrong,
+        notes: updated.notes,
       }, { onConflict: 'user_id,session_id' })
 
     if (error) setError(error.message)
     setSyncing(false)
   }, [progress, userId])
 
-  const toggleDone = useCallback((sessionId) => {
-    const current = progress[sessionId] ?? { done: false, questions: 0 }
+  const toggleDone = useCallback((sessionId: string) => {
+    const current = progress[sessionId] ?? { done: false, questions: 0, correct: 0, wrong: 0, notes: '' }
     const nowDone = !current.done
     saveSession(sessionId, {
       done: nowDone,
@@ -101,8 +107,13 @@ export function useProgress(userId) {
     })
   }, [progress, saveSession])
 
-  const setQuestions = useCallback((sessionId, questions) => {
-    saveSession(sessionId, { questions: Number(questions) || 0 })
+  const setQuestions = useCallback((sessionId: string, correct: number, wrong: number) => {
+    const questions = correct + wrong;
+    saveSession(sessionId, { correct: Number(correct) || 0, wrong: Number(wrong) || 0, questions })
+  }, [saveSession])
+
+  const setNotes = useCallback((sessionId: string, notes: string) => {
+    saveSession(sessionId, { notes })
   }, [saveSession])
 
   const clearProgress = useCallback(async () => {
@@ -133,6 +144,12 @@ export function useProgress(userId) {
   const totalQuestions = allSessions.reduce(
     (sum, s) => sum + (progress[s.sessionId]?.questions ?? 0), 0
   )
+  const totalCorrect = allSessions.reduce(
+    (sum, s) => sum + (progress[s.sessionId]?.correct ?? 0), 0
+  )
+  const totalWrong = allSessions.reduce(
+    (sum, s) => sum + (progress[s.sessionId]?.wrong ?? 0), 0
+  )
   const pctDone = totalSessions > 0 ? Math.round((totalDone / totalSessions) * 100) : 0
   const horasEstudadas = (totalDone * 1.5).toFixed(0)
 
@@ -152,12 +169,14 @@ export function useProgress(userId) {
   }
 
   function getSubjectStats() {
-    const stats = {}
+    const stats: any = {}
     allSessions.forEach(s => {
-      if (!stats[s.materia]) stats[s.materia] = { done: 0, total: 0, questions: 0 }
+      if (!stats[s.materia]) stats[s.materia] = { done: 0, total: 0, questions: 0, correct: 0, wrong: 0 }
       stats[s.materia].total++
       if (progress[s.sessionId]?.done) stats[s.materia].done++
       stats[s.materia].questions += progress[s.sessionId]?.questions ?? 0
+      stats[s.materia].correct += progress[s.sessionId]?.correct ?? 0
+      stats[s.materia].wrong += progress[s.sessionId]?.wrong ?? 0
     })
     return stats
   }
@@ -221,10 +240,13 @@ export function useProgress(userId) {
     error,
     toggleDone,
     setQuestions,
+    setNotes,
     clearProgress,
     totalSessions,
     totalDone,
     totalQuestions,
+    totalCorrect,
+    totalWrong,
     pctDone,
     horasEstudadas,
     avgPerDay,

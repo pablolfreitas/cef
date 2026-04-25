@@ -5,7 +5,7 @@ import s from './CicloView.module.css'
 
 const REPS = [1, 2, 3]
 
-export default function CicloView({ progress, toggleDone, setQuestions, getMesProgress, initialMes = 1 }) {
+export default function CicloView({ progress, toggleDone, setQuestions, setNotes, getMesProgress, initialMes = 1 }: any) {
   const [mes, setMes]     = useState(initialMes)
   const [rep, setRep]     = useState(1)
   const mesData           = MESES.find(m => m.mes === mes)
@@ -86,6 +86,7 @@ export default function CicloView({ progress, toggleDone, setQuestions, getMesPr
             state={progress[session.sessionId]}
             onToggle={toggleDone}
             onQuestions={setQuestions}
+            onNotes={setNotes}
           />
         ))}
       </div>
