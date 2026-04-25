@@ -1,14 +1,21 @@
 import { create } from 'zustand'
 
-export const useAppStore = create((set) => ({
+interface AppStore {
+  curMes: number
+  setCurMes: (mes: number) => void
+  user: null | { id: string; email: string }
+  setUser: (user: AppStore['user']) => void
+  progressData: unknown
+  setProgressData: (data: unknown) => void
+}
+
+export const useAppStore = create<AppStore>((set) => ({
   curMes: 1,
   setCurMes: (mes) => set({ curMes: mes }),
 
-  // Auth state
   user: null,
   setUser: (user) => set({ user }),
 
-  // Progress calculations cache
   progressData: null,
   setProgressData: (data) => set({ progressData: data }),
 }))
