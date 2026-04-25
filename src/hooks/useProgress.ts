@@ -38,17 +38,36 @@ export function useProgress(userId) {
         setError(error.message)
         try {
           const local = localStorage.getItem(cacheKey(userId))
-          if (local) setProgress(JSON.parse(local))
+          if (local) {
+            const parsed = JSON.parse(local)
+            const cleanMap: any = {}
+            for (const [key, val] of Object.entries(parsed)) {
+              let q = Number((val as any).questions) || 0;
+              const c = Number((val as any).correct) || 0;
+              const w = Number((val as any).wrong) || 0;
+              if (c > 0 || w > 0) q = c + w;
+              cleanMap[key] = { ...(val as any), questions: q, correct: c, wrong: w }
+            }
+            setProgress(cleanMap)
+          }
         } catch {}
       } else {
         const map: any = {}
         data.forEach(row => {
+          let q = Number(row.questions) || 0;
+          const c = Number(row.correct) || 0;
+          const w = Number(row.wrong) || 0;
+          
+          if (c > 0 || w > 0) {
+            q = c + w;
+          }
+
           map[row.session_id] = {
             done: row.done,
-            questions: row.questions,
+            questions: q,
             done_at: row.done_at,
-            correct: row.correct,
-            wrong: row.wrong,
+            correct: c,
+            wrong: w,
             notes: row.notes,
           }
         })
@@ -107,9 +126,11 @@ export function useProgress(userId) {
     })
   }, [progress, saveSession])
 
-  const setQuestions = useCallback((sessionId: string, correct: number, wrong: number) => {
-    const questions = correct + wrong;
-    saveSession(sessionId, { correct: Number(correct) || 0, wrong: Number(wrong) || 0, questions })
+  const setQuestions = useCallback((sessionId: string, correct: number | string, wrong: number | string) => {
+    const c = Number(correct) || 0;
+    const w = Number(wrong) || 0;
+    const questions = c + w;
+    saveSession(sessionId, { correct: c, wrong: w, questions })
   }, [saveSession])
 
   const setNotes = useCallback((sessionId: string, notes: string) => {
@@ -142,13 +163,13 @@ export function useProgress(userId) {
 
   const totalDone = allSessions.filter(s => progress[s.sessionId]?.done).length
   const totalQuestions = allSessions.reduce(
-    (sum, s) => sum + (progress[s.sessionId]?.questions ?? 0), 0
+    (sum, s) => sum + Number(progress[s.sessionId]?.questions ?? 0), 0
   )
   const totalCorrect = allSessions.reduce(
-    (sum, s) => sum + (progress[s.sessionId]?.correct ?? 0), 0
+    (sum, s) => sum + Number(progress[s.sessionId]?.correct ?? 0), 0
   )
   const totalWrong = allSessions.reduce(
-    (sum, s) => sum + (progress[s.sessionId]?.wrong ?? 0), 0
+    (sum, s) => sum + Number(progress[s.sessionId]?.wrong ?? 0), 0
   )
   const pctDone = totalSessions > 0 ? Math.round((totalDone / totalSessions) * 100) : 0
   const horasEstudadas = (totalDone * 1.5).toFixed(0)
@@ -174,9 +195,9 @@ export function useProgress(userId) {
       if (!stats[s.materia]) stats[s.materia] = { done: 0, total: 0, questions: 0, correct: 0, wrong: 0 }
       stats[s.materia].total++
       if (progress[s.sessionId]?.done) stats[s.materia].done++
-      stats[s.materia].questions += progress[s.sessionId]?.questions ?? 0
-      stats[s.materia].correct += progress[s.sessionId]?.correct ?? 0
-      stats[s.materia].wrong += progress[s.sessionId]?.wrong ?? 0
+      stats[s.materia].questions += Number(progress[s.sessionId]?.questions ?? 0)
+      stats[s.materia].correct += Number(progress[s.sessionId]?.correct ?? 0)
+      stats[s.materia].wrong += Number(progress[s.sessionId]?.wrong ?? 0)
     })
     return stats
   }
@@ -190,7 +211,7 @@ export function useProgress(userId) {
         const start = new Date(d)
         start.setDate(d.getDate() - d.getDay())
         const key = start.toISOString().split('T')[0]
-        weeks[key] = (weeks[key] ?? 0) + (p.questions ?? 0)
+        weeks[key] = (weeks[key] ?? 0) + Number(p.questions ?? 0)
       }
     })
     const result = []

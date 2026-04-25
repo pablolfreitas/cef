@@ -15,7 +15,7 @@ export default function StatsView({
 
   const byType = { V: 0, Q: 0, P: 0 }
   getAllSessions().forEach(s => {
-    byType[s.tipo] += progress[s.sessionId]?.questions ?? 0
+    byType[s.tipo] += Number(progress[s.sessionId]?.questions ?? 0)
   })
   const typeData = [
     { name: '[V] Videoaula', value: byType.V, color: '#5B8DEF' },
