@@ -50,7 +50,7 @@ export default function BlockCard({ session, state, onToggle, onQuestions, onNot
       <div className={s.footer}>
         <div className={s.inputsRow}>
           <label className={s.qLabel} title="Questões Feitas (Total)">
-            📝
+            Questões feitas
             <input
               className={s.qInput}
               type="number"
@@ -61,7 +61,7 @@ export default function BlockCard({ session, state, onToggle, onQuestions, onNot
             />
           </label>
           <label className={s.qLabel} title="Erros">
-            🟥
+            Erradas
             <input
               className={s.qInput}
               type="number"
