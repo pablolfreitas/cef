@@ -49,13 +49,13 @@ export default function BlockCard({ session, state, onToggle, onQuestions, onNot
 
       <div className={s.footer}>
         <div className={s.inputsRow}>
-          <label className={s.qLabel} title="Acertos">
-            🟩
+          <label className={s.qLabel} title="Questões Feitas (Total)">
+            📝
             <input
               className={s.qInput}
               type="number"
               min="0"
-              value={correct || ''}
+              value={(correct + wrong) || ''}
               placeholder="0"
               onChange={e => onQuestions(session.sessionId, e.target.value, wrong)}
             />
@@ -68,7 +68,7 @@ export default function BlockCard({ session, state, onToggle, onQuestions, onNot
               min="0"
               value={wrong || ''}
               placeholder="0"
-              onChange={e => onQuestions(session.sessionId, correct, e.target.value)}
+              onChange={e => onQuestions(session.sessionId, (correct + wrong), e.target.value)}
             />
           </label>
         </div>

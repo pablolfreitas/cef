@@ -135,10 +135,11 @@ export function useProgress(userId) {
     })
   }, [progress, saveSession])
 
-  const setQuestions = useCallback((sessionId: string, correct: number | string, wrong: number | string) => {
-    const c = Math.max(0, Number(correct) || 0);
-    const w = Math.max(0, Number(wrong) || 0);
-    const questions = c + w;
+  const setQuestions = useCallback((sessionId: string, feitas: number | string, erros: number | string) => {
+    const f = Math.max(0, Number(feitas) || 0);
+    const w = Math.max(0, Number(erros) || 0);
+    const questions = f;
+    const c = Math.max(0, f - w);
     saveSession(sessionId, { correct: c, wrong: w, questions })
   }, [saveSession])
 
