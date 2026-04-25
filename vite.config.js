@@ -7,12 +7,16 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
+      includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
-        name: 'FinTrack App',
-        short_name: 'FinTrack',
-        description: 'FinTrack Personal Finance',
-        theme_color: '#ffffff',
+        name: 'CEF TBN·TI — Painel de Estudos',
+        short_name: 'CEF Estudos',
+        description: 'Acompanhe seu ciclo de estudos para o concurso Caixa Econômica Federal — Técnico Bancário Novo TI.',
+        theme_color: '#09090B',
+        background_color: '#09090B',
+        display: 'standalone',
+        start_url: '/',
+        lang: 'pt-BR',
         icons: [
           {
             src: 'pwa-192x192.png',
@@ -22,7 +26,8 @@ export default defineConfig({
           {
             src: 'pwa-512x512.png',
             sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'any maskable'
           }
         ]
       }
