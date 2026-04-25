@@ -43,8 +43,13 @@ export function useProgress(userId) {
             const cleanMap: any = {}
             for (const [key, val] of Object.entries(parsed)) {
               let q = Number((val as any).questions) || 0;
-              const c = Number((val as any).correct) || 0;
-              const w = Number((val as any).wrong) || 0;
+              let c = Number((val as any).correct) || 0;
+              let w = Number((val as any).wrong) || 0;
+              
+              if (q > 9999) q = 0;
+              if (c > 9999) c = 0;
+              if (w > 9999) w = 0;
+              
               if (c > 0 || w > 0) q = c + w;
               cleanMap[key] = { ...(val as any), questions: q, correct: c, wrong: w }
             }
@@ -55,8 +60,12 @@ export function useProgress(userId) {
         const map: any = {}
         data.forEach(row => {
           let q = Number(row.questions) || 0;
-          const c = Number(row.correct) || 0;
-          const w = Number(row.wrong) || 0;
+          let c = Number(row.correct) || 0;
+          let w = Number(row.wrong) || 0;
+          
+          if (q > 9999) q = 0;
+          if (c > 9999) c = 0;
+          if (w > 9999) w = 0;
           
           if (c > 0 || w > 0) {
             q = c + w;
@@ -127,8 +136,8 @@ export function useProgress(userId) {
   }, [progress, saveSession])
 
   const setQuestions = useCallback((sessionId: string, correct: number | string, wrong: number | string) => {
-    const c = Number(correct) || 0;
-    const w = Number(wrong) || 0;
+    const c = Math.max(0, Number(correct) || 0);
+    const w = Math.max(0, Number(wrong) || 0);
     const questions = c + w;
     saveSession(sessionId, { correct: c, wrong: w, questions })
   }, [saveSession])
