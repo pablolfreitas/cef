@@ -76,34 +76,10 @@
   padding: 22px;
 }
 
-.tabs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--bg);
-  padding: 5px;
-  margin-bottom: 24px;
-}
-
-.tabs button,
 .linkButton,
 .submit {
   border: 0;
   border-radius: 7px;
-}
-
-.tabs button {
-  min-height: 38px;
-  background: transparent;
-  color: var(--muted);
-  font-weight: 700;
-}
-
-.tabs .activeTab {
-  background: var(--bg3);
-  color: var(--text);
 }
 
 .form {

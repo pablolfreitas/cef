@@ -1,21 +1,60 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import s from './LoginPage.module.css'
 
 export default function LoginPage() {
-  const [mode, setMode] = useState('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  
+  const [attempts, setAttempts] = useState(0)
+  const [blockedUntil, setBlockedUntil] = useState(null)
 
-  const isSignup = mode === 'signup'
+  useEffect(() => {
+    // Check local storage for existing blocks
+    const storedBlock = localStorage.getItem('login_blocked_until')
+    if (storedBlock) {
+      const blockTime = parseInt(storedBlock, 10)
+      if (Date.now() < blockTime) {
+        setBlockedUntil(blockTime)
+      } else {
+        localStorage.removeItem('login_blocked_until')
+        localStorage.removeItem('login_attempts')
+      }
+    } else {
+      const storedAttempts = localStorage.getItem('login_attempts')
+      if (storedAttempts) setAttempts(parseInt(storedAttempts, 10))
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!blockedUntil) return
+    
+    const interval = setInterval(() => {
+      if (Date.now() >= blockedUntil) {
+        setBlockedUntil(null)
+        setAttempts(0)
+        localStorage.removeItem('login_blocked_until')
+        localStorage.removeItem('login_attempts')
+        setError('')
+      }
+    }, 1000)
+    
+    return () => clearInterval(interval)
+  }, [blockedUntil])
 
   async function handleSubmit(event) {
     event.preventDefault()
     setError('')
     setMessage('')
+    
+    if (blockedUntil) {
+      setError('Muitas tentativas falhas. Tente novamente mais tarde.')
+      return
+    }
+
     setLoading(true)
 
     const credentials = {
@@ -23,44 +62,33 @@ export default function LoginPage() {
       password,
     }
 
-    const { data, error: authError } = isSignup
-      ? await supabase.auth.signUp(credentials)
-      : await supabase.auth.signInWithPassword(credentials)
+    const { error: authError } = await supabase.auth.signInWithPassword(credentials)
 
     if (authError) {
-      setError(authError.message)
-    } else if (isSignup && !data.session) {
-      setMessage('Cadastro criado. Confira seu e-mail para confirmar o acesso.')
+      const newAttempts = attempts + 1
+      setAttempts(newAttempts)
+      localStorage.setItem('login_attempts', newAttempts.toString())
+      
+      if (newAttempts >= 5) {
+        // Bloqueia por 15 minutos (900000 ms)
+        const blockTime = Date.now() + 900000
+        setBlockedUntil(blockTime)
+        localStorage.setItem('login_blocked_until', blockTime.toString())
+        setError('Acesso bloqueado por muitas tentativas falhas. Aguarde 15 minutos.')
+      } else {
+        setError(`Credenciais invalidas. Tentativa ${newAttempts} de 5.`)
+      }
     } else {
-      setMessage(isSignup ? 'Conta criada com sucesso.' : 'Login realizado.')
+      setAttempts(0)
+      localStorage.removeItem('login_attempts')
+      localStorage.removeItem('login_blocked_until')
+      setMessage('Login realizado.')
     }
 
     setLoading(false)
   }
 
-  async function handlePasswordReset() {
-    setError('')
-    setMessage('')
-
-    const cleanEmail = email.trim()
-    if (!cleanEmail) {
-      setError('Informe seu e-mail para receber o link de redefinicao.')
-      return
-    }
-
-    setLoading(true)
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(cleanEmail, {
-      redirectTo: window.location.origin,
-    })
-
-    if (resetError) {
-      setError(resetError.message)
-    } else {
-      setMessage('Enviamos um link de redefinicao para o seu e-mail.')
-    }
-
-    setLoading(false)
-  }
+  const isBlocked = !!blockedUntil
 
   return (
     <main className={s.page}>
@@ -78,28 +106,11 @@ export default function LoginPage() {
         </div>
       </section>
 
-      <section className={s.card} aria-label={isSignup ? 'Criar conta' : 'Entrar'}>
-        <div className={s.tabs}>
-          <button
-            type="button"
-            className={mode === 'login' ? s.activeTab : ''}
-            onClick={() => { setMode('login'); setError(''); setMessage('') }}
-          >
-            Entrar
-          </button>
-          <button
-            type="button"
-            className={mode === 'signup' ? s.activeTab : ''}
-            onClick={() => { setMode('signup'); setError(''); setMessage('') }}
-          >
-            Criar conta
-          </button>
-        </div>
-
+      <section className={s.card} aria-label="Entrar">
         <form className={s.form} onSubmit={handleSubmit}>
           <div className={s.heading}>
-            <h2>{isSignup ? 'Crie seu acesso' : 'Acesse sua conta'}</h2>
-            <p>{isSignup ? 'Seu progresso ficara ligado ao seu e-mail.' : 'Continue de onde parou.'}</p>
+            <h2>Acesse sua conta</h2>
+            <p>Continue de onde parou.</p>
           </div>
 
           <label className={s.field}>
@@ -111,6 +122,7 @@ export default function LoginPage() {
               onChange={event => setEmail(event.target.value)}
               placeholder="voce@email.com"
               required
+              disabled={isBlocked}
             />
           </label>
 
@@ -118,28 +130,23 @@ export default function LoginPage() {
             Senha
             <input
               type="password"
-              autoComplete={isSignup ? 'new-password' : 'current-password'}
+              autoComplete="current-password"
               value={password}
               onChange={event => setPassword(event.target.value)}
               minLength={6}
               placeholder="Minimo de 6 caracteres"
               required
+              disabled={isBlocked}
             />
           </label>
 
           {error && <div className={s.feedbackError}>{error}</div>}
           {message && <div className={s.feedbackOk}>{message}</div>}
 
-          <button className={s.submit} type="submit" disabled={loading}>
-            {loading ? 'Aguarde...' : isSignup ? 'Criar conta' : 'Entrar'}
+          <button className={s.submit} type="submit" disabled={loading || isBlocked}>
+            {loading ? 'Aguarde...' : isBlocked ? 'Bloqueado temporariamente' : 'Entrar'}
           </button>
         </form>
-
-        {!isSignup && (
-          <button className={s.linkButton} type="button" onClick={handlePasswordReset} disabled={loading}>
-            Esqueci minha senha
-          </button>
-        )}
       </section>
     </main>
   )
