@@ -1,4 +1,5 @@
 import s from './Sidebar.module.css'
+import { Link, useNavigate } from 'react-router-dom'
 
 const NAV = [
   { view: 'dashboard', icon: '◈', label: 'Dashboard' },
@@ -15,7 +16,9 @@ const MESES_NAV = [
   { mes: 5, label: 'Mês 5 — Final' },
 ]
 
-export default function Sidebar({ activeView, onNav, onMes, stats, syncing }) {
+export default function Sidebar({ activeView, onMes, stats, syncing }) {
+  const navigate = useNavigate()
+
   return (
     <aside className={s.sidebar}>
       <div className={s.logo}>
@@ -27,14 +30,14 @@ export default function Sidebar({ activeView, onNav, onMes, stats, syncing }) {
       <nav className={s.nav}>
         <span className={s.navLabel}>Navegação</span>
         {NAV.map(n => (
-          <button
+          <Link
             key={n.view}
+            to={`/${n.view}`}
             className={`${s.navItem} ${activeView === n.view ? s.active : ''}`}
-            onClick={() => onNav(n.view)}
           >
             <span className={s.icon}>{n.icon}</span>
             {n.label}
-          </button>
+          </Link>
         ))}
 
         <span className={s.navLabel}>Meses</span>
@@ -42,7 +45,7 @@ export default function Sidebar({ activeView, onNav, onMes, stats, syncing }) {
           <button
             key={m.mes}
             className={s.navItem}
-            onClick={() => { onNav('ciclo'); onMes(m.mes) }}
+            onClick={() => { onMes(m.mes); navigate('/ciclo'); }}
           >
             <span className={s.icon}>{'①②③④⑤'[m.mes - 1]}</span>
             {m.label}
