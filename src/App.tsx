@@ -6,6 +6,7 @@ import Sidebar from './components/Sidebar'
 import { useAuth } from './hooks/useAuth'
 import { useProgress } from './hooks/useProgress'
 import s from './App.module.css'
+import Pomodoro from './components/Pomodoro'
 
 function PageTransition({ children }: { children: React.ReactNode }) {
   return (
@@ -192,6 +193,7 @@ export default function App() {
           </Suspense>
         </div>
       </main>
+      <Pomodoro />
     </div>
   )
 }

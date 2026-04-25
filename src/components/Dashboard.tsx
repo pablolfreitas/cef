@@ -19,17 +19,33 @@ function getMotivation(pct) {
   return MOTIVATIONS.find(m => pct >= m.min && pct < m.max) ?? MOTIVATIONS[0]
 }
 
-function StreakGrid({ getDailyActivity }) {
+import { ActivityCalendar } from 'react-activity-calendar'
+
+function StreakGrid({ getDailyActivity }: any) {
   const days = getDailyActivity()
   return (
-    <div className={s.streakGrid}>
-      {days.map(d => (
-        <div
-          key={d.key}
-          title={`${d.key}: ${d.count} sessão(ões)`}
-          className={`${s.streakDay} ${d.count >= 3 ? s.full : d.count > 0 ? s.partial : ''}`}
-        />
-      ))}
+    <div style={{ padding: '0 10px', overflowX: 'auto' }}>
+      <ActivityCalendar
+        data={days}
+        theme={{
+          light: ['#27272A', '#34D39940', '#34D39980', '#34D399C0', '#34D399'],
+          dark: ['#27272A', '#34D39940', '#34D39980', '#34D399C0', '#34D399']
+        }}
+        colorScheme="dark"
+        labels={{
+          legend: {
+            less: 'Menos',
+            more: 'Mais',
+          },
+          months: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+          weekdays: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+          totalCount: '{{count}} sessões em {{year}}'
+        }}
+        showWeekdayLabels
+        blockSize={12}
+        blockMargin={4}
+        blockRadius={3}
+      />
     </div>
   )
 }
@@ -128,14 +144,9 @@ export default function Dashboard({
       </div>
 
       {/* Streak */}
-      <h3 className={s.sectionTitle}>Atividade — últimos 35 dias</h3>
+      <h3 className={s.sectionTitle}>Atividade de Estudos Anual</h3>
       <div className={s.chartCard}>
         <StreakGrid getDailyActivity={getDailyActivity} />
-        <div className={s.streakLegend}>
-          <span><i className={s.dotEmpty} /> Sem estudo</span>
-          <span><i className={s.dotPartial} /> Parcial</span>
-          <span><i className={s.dotFull} /> 3+ sessões</span>
-        </div>
       </div>
     </div>
   )

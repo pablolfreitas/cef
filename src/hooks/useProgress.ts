@@ -198,11 +198,18 @@ export function useProgress(userId) {
     })
     const result = []
     const now = new Date()
-    for (let i = 34; i >= 0; i--) {
+    for (let i = 365; i >= 0; i--) {
       const d = new Date(now)
       d.setDate(d.getDate() - i)
       const key = d.toISOString().split('T')[0]
-      result.push({ key, count: days[key] ?? 0 })
+      const count = days[key] ?? 0
+      let level = 0
+      if (count > 0 && count <= 2) level = 1
+      else if (count >= 3 && count <= 5) level = 2
+      else if (count >= 6 && count <= 8) level = 3
+      else if (count > 8) level = 4
+      
+      result.push({ date: key, count, level })
     }
     return result
   }
