@@ -1,32 +1,39 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:        #0A0B0E;
-  --bg2:       #111318;
-  --bg3:       #181C24;
-  --bg4:       #1E2330;
-  --border:    rgba(255,255,255,0.06);
-  --border2:   rgba(255,255,255,0.12);
-  --text:      #F0F2F8;
-  --muted:     #7A8099;
-  --muted2:    #3A3F55;
+  /* Premium Dark Theme (Zinc) */
+  --bg:        #09090B;
+  --bg2:       #18181B;
+  --bg3:       #27272A;
+  --bg4:       #3F3F46;
+  --border:    rgba(255,255,255,0.08);
+  --border2:   rgba(255,255,255,0.15);
+  --text:      #FAFAFA;
+  --muted:     #A1A1AA;
+  --muted2:    #52525B;
 
-  --gold:      #F5C842;
-  --gold-bg:   rgba(245,200,66,0.08);
-  --teal:      #2DD4A8;
-  --teal-bg:   rgba(45,212,168,0.08);
-  --blue:      #5B8DEF;
-  --blue-bg:   rgba(91,141,239,0.08);
-  --coral:     #F0715A;
-  --coral-bg:  rgba(240,113,90,0.08);
-  --purple:    #9B7FE8;
-  --purple-bg: rgba(155,127,232,0.08);
+  /* Accent Colors */
+  --gold:      #FBBF24;
+  --gold-bg:   rgba(251, 191, 36, 0.1);
+  --teal:      #34D399;
+  --teal-bg:   rgba(52, 211, 153, 0.1);
+  --blue:      #60A5FA;
+  --blue-bg:   rgba(96, 165, 250, 0.1);
+  --coral:     #F87171;
+  --coral-bg:  rgba(248, 113, 113, 0.1);
+  --purple:    #C084FC;
+  --purple-bg: rgba(192, 132, 252, 0.1);
 
-  --radius:    12px;
+  --radius:    14px;
   --radius-sm: 8px;
   --sidebar-w: 240px;
 
-  font-family: 'Instrument Sans', sans-serif;
+  /* Typography */
+  --font-base: 'Inter', sans-serif;
+  --font-heading: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  font-family: var(--font-base);
   font-size: 14px;
   line-height: 1.6;
   color: var(--text);

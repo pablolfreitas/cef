@@ -24,7 +24,7 @@
 .mesTab.active { background: var(--gold); color: #0A0B0E; border-color: var(--gold); }
 
 .mesTabBadge {
-  font-family: 'DM Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 10px;
   background: rgba(0,0,0,0.15);
   border-radius: 99px;
@@ -38,7 +38,7 @@
 }
 
 .mesLabel {
-  font-family: 'DM Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 10px;
   color: var(--muted);
   letter-spacing: 0.1em;
@@ -46,7 +46,7 @@
 }
 
 .mesTitulo {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-heading);
   font-size: 20px;
   font-weight: 800;
 }
@@ -54,7 +54,7 @@
 .mesStats { text-align: right; }
 .mesPct {
   display: block;
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-heading);
   font-size: 26px;
   font-weight: 800;
   color: var(--gold);
@@ -112,7 +112,7 @@
 }
 
 .repBadge {
-  font-family: 'DM Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 9px;
   background: rgba(45,212,168,0.15);
   border-radius: 99px;

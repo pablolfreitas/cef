@@ -24,7 +24,7 @@
 }
 
 .topbarTitle {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-heading);
   font-size: 17px;
   font-weight: 700;
 }
@@ -36,7 +36,7 @@
 }
 
 .date {
-  font-family: 'DM Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
   color: var(--muted);
   text-transform: capitalize;
@@ -68,7 +68,7 @@
 }
 
 .syncPill {
-  font-family: 'DM Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 10px;
   color: var(--teal);
   background: var(--teal-bg);

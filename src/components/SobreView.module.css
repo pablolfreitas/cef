@@ -11,7 +11,7 @@
 }
 
 .bannerIcon { font-size: 28px; }
-.banner strong { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--gold); display: block; margin-bottom: 4px; }
+.banner strong { font-family: var(--font-heading); font-size: 15px; font-weight: 700; color: var(--gold); display: block; margin-bottom: 4px; }
 .banner p { font-size: 12px; color: var(--muted); }
 
 .grid {
@@ -28,7 +28,7 @@
 }
 
 .cardTitle {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-heading);
   font-size: 13px;
   font-weight: 700;
   margin-bottom: 14px;
@@ -45,7 +45,7 @@
 .infoRow:last-child { border-bottom: none; }
 
 .infoLabel { font-size: 12px; color: var(--muted); }
-.infoVal   { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; }
+.infoVal   { font-family: var(--font-mono); font-size: 11px; font-weight: 500; }
 .highlight { color: var(--coral); }
 .gold      { color: var(--gold); font-weight: 700; }
 
@@ -63,7 +63,7 @@
 }
 
 .tipoTag {
-  font-family: 'DM Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.06em;
