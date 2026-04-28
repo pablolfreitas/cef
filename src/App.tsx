@@ -50,10 +50,10 @@ class ErrorBoundary extends Component<{ children: ReactNode }, ErrorBoundaryStat
 function PageTransition({ children }: { children: React.ReactNode }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.2 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.18, ease: 'easeOut' }}
     >
       {children}
     </motion.div>
@@ -84,9 +84,7 @@ export default function App() {
   const progress = useProgress(auth.user?.id)
 
   const now = new Date().toLocaleDateString('pt-BR', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
+    weekday: 'long', day: 'numeric', month: 'long',
   })
 
   async function handleReset() {
@@ -102,43 +100,35 @@ export default function App() {
     </div>
   )
 
-  if (auth.loading) {
-    return (
-      <div className={s.loading}>
-        <div className={s.loadingSpinner} />
-        <p>Carregando seu progresso...</p>
-      </div>
-    )
-  }
+  if (auth.loading) return (
+    <div className={s.loading}>
+      <div className={s.loadingSpinner} />
+      <p>Carregando seu progresso...</p>
+    </div>
+  )
 
-  if (auth.recovery) {
-    return (
-      <ErrorBoundary>
-        <Suspense fallback={loadingFallback}>
-          <PasswordUpdatePage onDone={auth.finishRecovery} />
-        </Suspense>
-      </ErrorBoundary>
-    )
-  }
+  if (auth.recovery) return (
+    <ErrorBoundary>
+      <Suspense fallback={loadingFallback}>
+        <PasswordUpdatePage onDone={auth.finishRecovery} />
+      </Suspense>
+    </ErrorBoundary>
+  )
 
-  if (!auth.user) {
-    return (
-      <ErrorBoundary>
-        <Suspense fallback={loadingFallback}>
-          <LoginPage />
-        </Suspense>
-      </ErrorBoundary>
-    )
-  }
+  if (!auth.user) return (
+    <ErrorBoundary>
+      <Suspense fallback={loadingFallback}>
+        <LoginPage />
+      </Suspense>
+    </ErrorBoundary>
+  )
 
-  if (progress.loading) {
-    return (
-      <div className={s.loading}>
-        <div className={s.loadingSpinner} />
-        <p>Carregando seu progresso...</p>
-      </div>
-    )
-  }
+  if (progress.loading) return (
+    <div className={s.loading}>
+      <div className={s.loadingSpinner} />
+      <p>Carregando seu progresso...</p>
+    </div>
+  )
 
   const sidebarStats = {
     totalDone:      progress.totalDone,
@@ -150,28 +140,21 @@ export default function App() {
     <ErrorBoundary>
       <div className={s.layout}>
         <Sidebar
-          activeView={view}
-          onMes={mes => { setCurMes(mes) }}
+          onMes={mes => setCurMes(mes)}
           stats={sidebarStats}
           syncing={progress.syncing}
+          userEmail={auth.user.email}
+          onSignOut={auth.signOut}
         />
 
         <main className={s.main}>
           <header className={s.topbar}>
-            <h2 className={s.topbarTitle}>{VIEW_TITLES[view] ?? 'Painel'}</h2>
+            <div className={s.topbarLeft}>
+              <h2 className={s.topbarTitle}>{VIEW_TITLES[view] ?? 'Painel'}</h2>
+            </div>
             <div className={s.topbarRight}>
-              {progress.error && (
-                <span className={s.errorPill} title={progress.error}>
-                  offline
-                </span>
-              )}
-              {progress.syncing && (
-                <span className={s.syncPill}>sync</span>
-              )}
-              <span className={s.userEmail}>{auth.user.email}</span>
-              <button className={s.signOutBtn} onClick={auth.signOut}>
-                Sair
-              </button>
+              {progress.error && <span className={s.errorPill}>offline</span>}
+              {progress.syncing && <span className={s.syncPill}>sync</span>}
               <span className={s.date}>{now}</span>
             </div>
           </header>
