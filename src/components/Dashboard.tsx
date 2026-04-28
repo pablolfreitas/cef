@@ -6,81 +6,46 @@ import { MESES, SUBJECT_COLORS } from '../data/ciclo'
 import { ActivityCalendar } from 'react-activity-calendar'
 import s from './Dashboard.module.css'
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-interface SubjectStat { done: number; total: number; pct: number }
-interface WeekDatum   { label: string; value: number }
-interface DayDatum    { date: string; count: number; level: 0 | 1 | 2 | 3 | 4 }
-
 interface DashboardProps {
-  pctDone:        number
-  totalDone:      number
-  totalSessions:  number
-  totalQuestions: number
-  totalCorrect:   number
-  totalWrong:     number
-  avgPerDay:      number | null
-  horasEstudadas: number
-  studyDaysCount: number
+  pctDone: number; totalDone: number; totalSessions: number
+  totalQuestions: number; totalCorrect: number; totalWrong: number
+  avgPerDay: number | null; horasEstudadas: number; studyDaysCount: number
   getMesProgress: (mes: number) => { done: number; total: number; pct: number }
-  getSubjectStats: () => Record<string, SubjectStat>
-  getWeeklyData:   () => WeekDatum[]
-  getDailyActivity:() => DayDatum[]
+  getSubjectStats: () => Record<string, any>
+  getWeeklyData: () => { label: string; value: number }[]
+  getDailyActivity: () => { date: string; count: number; level: 0|1|2|3|4 }[]
 }
 
-interface StatCardProps {
-  color: string
-  label: string
-  value: string | number
-  sub:   string
-  pct?:  number
-}
-
-// ─── Motivational banners ─────────────────────────────────────────────────────
 const MOTIVATIONS = [
-  { min: 0,   max: 1,   icon: '🎯', title: 'Bem-vindo ao painel!',   sub: 'Faça o primeiro bloco e comece a jornada rumo à CEF.' },
-  { min: 1,   max: 15,  icon: '🚀', title: 'Decolagem iniciada!',     sub: 'A consistência agora é mais importante que a velocidade.' },
-  { min: 15,  max: 35,  icon: '💪', title: 'Construindo a base!',     sub: 'Cada bloco feito é um ponto a mais no gabarito.' },
-  { min: 35,  max: 55,  icon: '⚡', title: 'Ritmo excelente!',        sub: 'Você está no ritmo de quem vai ser aprovado.' },
-  { min: 55,  max: 75,  icon: '🔥', title: 'Mais da metade!',         sub: 'A maioria desiste aqui. Você não é a maioria.' },
-  { min: 75,  max: 95,  icon: '🏆', title: 'Reta final!',             sub: 'Cada sessão agora pesa ouro. Continue.' },
-  { min: 95,  max: 101, icon: '👑', title: 'Ciclo quase completo!',   sub: 'Você fez o que poucos fazem. A aprovação é consequência.' },
+  { min: 0,  max: 1,   icon: '🎯', title: 'Bem-vindo ao painel!',  sub: 'Comece o primeiro bloco. A jornada rumo à CEF começa agora.' },
+  { min: 1,  max: 15,  icon: '🚀', title: 'Decolagem!',             sub: 'Consistência supera intensidade. Continue todos os dias.' },
+  { min: 15, max: 35,  icon: '💪', title: 'Construindo a base!',    sub: 'Cada bloco feito é mais um ponto no gabarito.' },
+  { min: 35, max: 55,  icon: '⚡', title: 'Ritmo excelente!',       sub: 'Você está no ritmo de quem vai ser aprovado.' },
+  { min: 55, max: 75,  icon: '🔥', title: 'Mais da metade!',        sub: 'A maioria desiste aqui. Você não é a maioria.' },
+  { min: 75, max: 95,  icon: '🏆', title: 'Reta final!',            sub: 'Cada sessão agora pesa ouro. Não pare.' },
+  { min: 95, max: 101, icon: '👑', title: 'Ciclo quase completo!',  sub: 'Você fez o que poucos fazem. A aprovação é consequência.' },
 ]
 
 function getMotivation(pct: number) {
   return MOTIVATIONS.find(m => pct >= m.min && pct < m.max) ?? MOTIVATIONS[0]
 }
 
-// ─── Streak grid ──────────────────────────────────────────────────────────────
-function StreakGrid({ getDailyActivity }: Pick<DashboardProps, 'getDailyActivity'>) {
-  const days = getDailyActivity()
-  return (
-    <div style={{ padding: '0 10px', overflowX: 'auto' }}>
-      <ActivityCalendar
-        data={days}
-        theme={{
-          light: ['#27272A', '#34D39940', '#34D39980', '#34D399C0', '#34D399'],
-          dark:  ['#27272A', '#34D39940', '#34D39980', '#34D399C0', '#34D399'],
-        }}
-        colorScheme="dark"
-        labels={{
-          legend: { less: 'Menos', more: 'Mais' },
-          months: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
-          weekdays: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'],
-          totalCount: '{{count}} sessões em {{year}}',
-        }}
-        showWeekdayLabels
-        blockSize={12}
-        blockMargin={4}
-        blockRadius={3}
-      />
-    </div>
-  )
+const TOOLTIP_STYLE = {
+  contentStyle: {
+    background: '#1C1C22',
+    border: '1px solid rgba(255,255,255,0.10)',
+    borderRadius: 10,
+    fontSize: 12,
+    boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+  },
+  labelStyle: { color: '#F4F4F5', fontWeight: 600 },
+  itemStyle:  { color: '#8F8FA3' },
 }
 
-// ─── StatCard ─────────────────────────────────────────────────────────────────
-function StatCard({ color, label, value, sub, pct }: StatCardProps) {
+function StatCard({ color, label, value, sub, pct, icon }: any) {
   return (
     <div className={`${s.statCard} ${s[color]}`}>
+      <div className={s.statIcon}>{icon}</div>
       <div className={s.statLabel}>{label}</div>
       <div className={`${s.statValue} ${s[color + 'Text']}`}>{value}</div>
       <div className={s.statSub}>{sub}</div>
@@ -93,23 +58,22 @@ function StatCard({ color, label, value, sub, pct }: StatCardProps) {
   )
 }
 
-// ─── Dashboard ────────────────────────────────────────────────────────────────
 export default function Dashboard({
   pctDone, totalDone, totalSessions, totalQuestions, totalCorrect, totalWrong,
   avgPerDay, horasEstudadas, studyDaysCount,
   getMesProgress, getSubjectStats, getWeeklyData, getDailyActivity,
 }: DashboardProps) {
   const accuracy = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0
-  const mot      = getMotivation(pctDone)
+  const mot = getMotivation(pctDone)
   const weekData = getWeeklyData()
   const subStats = getSubjectStats()
-  const pieData  = Object.entries(subStats)
-    .filter(([, v]) => v.done > 0)
-    .map(([name, v]) => ({ name, value: v.done, color: SUBJECT_COLORS[name] ?? '#888' }))
+  const pieData = Object.entries(subStats)
+    .filter(([, v]) => (v as any).done > 0)
+    .map(([name, v]) => ({ name, value: (v as any).done, color: SUBJECT_COLORS[name] ?? '#888' }))
 
   return (
     <div className={s.wrap}>
-      {/* Banner motivacional */}
+      {/* Banner */}
       <div className={s.banner}>
         <span className={s.bannerIcon}>{mot.icon}</span>
         <div className={s.bannerText}>
@@ -121,46 +85,64 @@ export default function Dashboard({
 
       {/* Stat cards */}
       <div className={s.statsGrid}>
-        <StatCard color="teal"   label="Taxa de Acerto"     value={`${accuracy}%`}                          sub={`${totalCorrect} acertos / ${totalWrong} erros`}  pct={accuracy} />
-        <StatCard color="gold"   label="Total de Questões"  value={totalQuestions.toLocaleString('pt-BR')} sub="registradas no ciclo"                             pct={pctDone}  />
-        <StatCard color="blue"   label="Sessões Concluídas" value={`${totalDone} / ${totalSessions}`}       sub="de 180 sessões (5×12×3)"                          pct={Math.round(totalDone / totalSessions * 100)} />
-        <StatCard color="purple" label="Média por Dia"      value={avgPerDay != null ? avgPerDay : '—'}      sub={`em ${studyDaysCount} dia(s) de estudo`} />
-        <StatCard color="teal"   label="Horas Estudadas"    value={`${horasEstudadas}h`}                    sub="estimado (1h30 / sessão)" />
+        <StatCard
+          color="teal" label="Taxa de Acerto" value={`${accuracy}%`}
+          sub={`${totalCorrect.toLocaleString()} acertos · ${totalWrong.toLocaleString()} erros`}
+          pct={accuracy}
+          icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>}
+        />
+        <StatCard
+          color="gold" label="Questões Totais" value={totalQuestions.toLocaleString('pt-BR')}
+          sub="registradas no ciclo" pct={pctDone}
+          icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>}
+        />
+        <StatCard
+          color="blue" label="Sessões Feitas" value={`${totalDone}/${totalSessions}`}
+          sub="de 180 sessões (5 × 12 × 3)"
+          pct={Math.round(totalDone / totalSessions * 100)}
+          icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>}
+        />
+        <StatCard
+          color="purple" label="Horas Estudadas" value={`${horasEstudadas}h`}
+          sub={`${studyDaysCount} dia(s) · ~${avgPerDay ?? '—'} q/dia`}
+          icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>}
+        />
       </div>
 
-      {/* Charts row */}
+      {/* Charts */}
       <div className={s.chartsRow}>
         <div className={s.chartCard}>
-          <h3 className={s.chartTitle}>Questões por semana</h3>
-          <ResponsiveContainer width="100%" height={180}>
-            <BarChart data={weekData} margin={{ top: 4, right: 4, bottom: 0, left: -20 }}>
-              <XAxis dataKey="label" tick={{ fill: '#7A8099', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: '#7A8099', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <Tooltip
-                contentStyle={{ background: '#181C24', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 8, fontSize: 12 }}
-                labelStyle={{ color: '#F0F2F8' }}
-                itemStyle={{ color: '#F5C842' }}
-              />
-              <Bar dataKey="value" name="Questões" fill="#F5C842" fillOpacity={0.7} radius={[4, 4, 0, 0]} />
+          <div className={s.chartHeader}>
+            <span className={s.chartTitle}>Questões por semana</span>
+          </div>
+          <ResponsiveContainer width="100%" height={190}>
+            <BarChart data={weekData} margin={{ top: 4, right: 4, bottom: 0, left: -22 }}>
+              <XAxis dataKey="label" tick={{ fill: '#8F8FA3', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: '#8F8FA3', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <Tooltip {...TOOLTIP_STYLE} formatter={(v: any) => [v, 'Questões']} />
+              <Bar dataKey="value" fill="#FBBF24" fillOpacity={0.75} radius={[5, 5, 0, 0]} maxBarSize={40} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
         <div className={s.chartCard}>
-          <h3 className={s.chartTitle}>Sessões por matéria</h3>
+          <div className={s.chartHeader}>
+            <span className={s.chartTitle}>Sessões por matéria</span>
+          </div>
           {pieData.length === 0 ? (
-            <div className={s.emptyChart}>Nenhuma sessão concluída ainda</div>
+            <div className={s.emptyChart}>
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--muted2)' }}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span>Nenhuma sessão<br />concluída ainda</span>
+            </div>
           ) : (
-            <ResponsiveContainer width="100%" height={180}>
+            <ResponsiveContainer width="100%" height={190}>
               <PieChart>
-                <Pie data={pieData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={2} dataKey="value">
-                  {pieData.map((entry) => (
-                    <Cell key={entry.name} fill={entry.color} fillOpacity={0.85} />
-                  ))}
+                <Pie data={pieData} cx="50%" cy="50%" innerRadius={52} outerRadius={82} paddingAngle={2} dataKey="value">
+                  {pieData.map(entry => <Cell key={entry.name} fill={entry.color} fillOpacity={0.88} />)}
                 </Pie>
                 <Tooltip
-                  contentStyle={{ background: '#181C24', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 8, fontSize: 12 }}
-                  formatter={(v, n) => [v + ' sessões', n]}
+                  {...TOOLTIP_STYLE}
+                  formatter={(v: any, n: any) => [v + ' sessões', n]}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -168,13 +150,16 @@ export default function Dashboard({
         </div>
       </div>
 
-      {/* Progresso por mês */}
-      <h3 className={s.sectionTitle}>Progresso por mês</h3>
+      {/* Progresso mensal */}
+      <div className={s.sectionHeader}>
+        <span className={s.sectionTitle}>Progresso por mês</span>
+      </div>
       <div className={s.mesCard}>
         {MESES.map(m => {
           const { done, total, pct } = getMesProgress(m.mes)
           return (
             <div key={m.mes} className={s.mesRow}>
+              <span className={s.mesIndex}>0{m.mes}</span>
               <div className={s.mesName}>
                 <span className={s.mesNum}>Mês {m.mes}</span>
                 <span className={s.mesSub}>{m.titulo}</span>
@@ -189,10 +174,32 @@ export default function Dashboard({
         })}
       </div>
 
-      {/* Streak */}
-      <h3 className={s.sectionTitle}>Atividade de Estudos Anual</h3>
-      <div className={s.chartCard}>
-        <StreakGrid getDailyActivity={getDailyActivity} />
+      {/* Streak anual */}
+      <div className={s.sectionHeader}>
+        <span className={s.sectionTitle}>Atividade de Estudos — Último Ano</span>
+      </div>
+      <div className={s.streakCard}>
+        <div style={{ overflowX: 'auto' }}>
+          <ActivityCalendar
+            data={getDailyActivity()}
+            theme={{
+              light: ['#27272A', '#34D39940', '#34D39980', '#34D399C0', '#34D399'],
+              dark:  ['#27272A', '#34D39940', '#34D39980', '#34D399C0', '#34D399'],
+            }}
+            colorScheme="dark"
+            labels={{
+              legend: { less: 'Menos', more: 'Mais' },
+              months: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+              weekdays: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'],
+              totalCount: '{{count}} sessões em {{year}}',
+            }}
+            showWeekdayLabels
+            blockSize={13}
+            blockMargin={4}
+            blockRadius={3}
+            fontSize={11}
+          />
+        </div>
       </div>
     </div>
   )
