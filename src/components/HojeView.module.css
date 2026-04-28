@@ -1,0 +1,91 @@
+.wrap { display: flex; flex-direction: column; gap: 22px; }
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 22px;
+  padding: 28px;
+  border: 1px solid var(--gold-border);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top left, rgba(251,191,36,0.18), transparent 34%),
+    linear-gradient(135deg, rgba(28,28,34,0.95), rgba(17,17,21,0.96));
+  box-shadow: var(--shadow-gold);
+}
+.kicker, .cardEyebrow {
+  display: inline-flex;
+  width: fit-content;
+  margin-bottom: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: var(--gold);
+  background: var(--gold-bg);
+  border: 1px solid var(--gold-border);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.hero h1 { max-width: 780px; font-family: var(--font-heading); font-size: clamp(28px, 4vw, 46px); line-height: 1.02; letter-spacing: -0.04em; }
+.hero p { max-width: 720px; margin-top: 14px; color: var(--text2); font-size: 15px; }
+.heroStats { display: grid; grid-template-columns: repeat(3, 110px); gap: 10px; align-self: end; }
+.heroStats div { padding: 14px; border-radius: 18px; background: rgba(255,255,255,0.045); border: 1px solid var(--border); }
+.heroStats strong { display: block; font-family: var(--font-heading); font-size: 24px; color: var(--gold); }
+.heroStats span { color: var(--muted); font-size: 12px; }
+.mainGrid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr); gap: 22px; align-items: start; }
+.todayCard, .card {
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(28,28,34,0.94), rgba(17,17,21,0.94));
+  box-shadow: var(--shadow-md);
+}
+.todayCard { padding: 24px; min-height: 410px; }
+.card { padding: 20px; }
+.sessionTop { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.sessionCode { color: var(--muted); font-family: var(--font-mono); font-size: 11px; }
+.subjectPill { padding: 4px 10px; border: 1px solid; border-radius: 999px; color: var(--text2); font-size: 12px; background: rgba(255,255,255,0.035); }
+.todayCard h2 { font-family: var(--font-heading); font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; }
+.sessionDesc { margin-top: 8px; color: var(--muted); }
+.whyBox { margin-top: 18px; padding: 14px 16px; border-radius: 16px; background: var(--blue-bg); border: 1px solid var(--blue-border); color: var(--text2); }
+.quickLog { display: grid; grid-template-columns: repeat(2, minmax(0, 160px)); gap: 12px; margin-top: 18px; }
+.quickLog label { display: flex; flex-direction: column; gap: 6px; color: var(--muted); font-size: 12px; }
+.quickLog input { height: 40px; border-radius: 12px; border: 1px solid var(--border2); background: var(--bg2); color: var(--text); padding: 0 12px; font-size: 15px; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
+.primaryBtn, .secondaryBtn {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  padding: 0 18px;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+.primaryBtn { background: var(--gold); color: #14110A; box-shadow: var(--shadow-gold); }
+.secondaryBtn { background: var(--bg3); color: var(--text); border-color: var(--border2); }
+.sideStack { display: flex; flex-direction: column; gap: 22px; }
+.cardHeader { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.cardHeader h3 { font-family: var(--font-heading); font-size: 16px; }
+.cardHeader a, .cardHeader span { color: var(--muted); font-size: 12px; }
+.riskList, .reviewList { display: flex; flex-direction: column; gap: 10px; }
+.riskRow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px; border-radius: 14px; background: rgba(255,255,255,0.035); border: 1px solid var(--border); }
+.riskRow strong { display: block; font-size: 13px; }
+.riskRow span { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; line-height: 1.35; }
+.riskRow b { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; font-family: var(--font-mono); font-size: 12px; }
+.danger { color: var(--coral); background: var(--coral-bg); border: 1px solid var(--coral-border); }
+.warn { color: var(--gold); background: var(--gold-bg); border: 1px solid var(--gold-border); }
+.safe { color: var(--teal); background: var(--teal-bg); border: 1px solid var(--teal-border); }
+.reviewItem { padding: 12px; border-radius: 14px; background: rgba(255,255,255,0.035); border: 1px solid var(--border); transition: border-color 0.2s, transform 0.2s; }
+.reviewItem:hover, .mistakeCard:hover { transform: translateY(-1px); border-color: var(--gold-border); }
+.reviewItem span { display: block; color: var(--gold); font-size: 11px; font-family: var(--font-mono); }
+.reviewItem strong { display: block; margin-top: 4px; font-size: 13px; }
+.reviewItem small { display: block; margin-top: 2px; color: var(--muted); }
+.muted { color: var(--muted); font-size: 13px; }
+.mistakeGrid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.mistakeCard { min-height: 150px; padding: 14px; border-radius: 16px; background: rgba(255,255,255,0.035); border: 1px solid var(--border); transition: border-color 0.2s, transform 0.2s; }
+.mistakeCard span { color: var(--gold); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; }
+.mistakeCard strong { display: block; margin-top: 8px; line-height: 1.25; }
+.mistakeCard p { margin-top: 8px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+.emptyState { display: grid; place-items: start; gap: 12px; }
+.emptyState p { color: var(--muted); }
+@media (max-width: 1100px) { .hero, .mainGrid { grid-template-columns: 1fr; } .heroStats { grid-template-columns: repeat(3, 1fr); } .mistakeGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .hero, .todayCard, .card { border-radius: 18px; padding: 18px; } .heroStats, .quickLog, .mistakeGrid { grid-template-columns: 1fr; } .sessionTop { align-items: flex-start; flex-direction: column; } }
